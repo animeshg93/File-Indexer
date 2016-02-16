@@ -4,33 +4,43 @@ import java.io.FileNotFoundException;
 
 public class Indexer{
 	private static HashMap<String, Integer> map;
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws FileNotFoundException {
+		getTopTen(args);
+	}
 
-		String filename = args[0];
-		File file = new File(filename);				//opens the file specified by the command-line argument
-		map = new HashMap<String, Integer>();
+	// loops through each filename given as the argument, creates a hashmap of <String, Integer> pair for each
+	// and calls the print() method to print the top 10 words across each file
+	public static void getTopTen (String[] args) throws FileNotFoundException{
+		for(String filename: args){
+			File file = new File(filename);				//opens the file specified by the command-line argument
+			map = new HashMap<String, Integer>();
 
-		//Will try and create a new Scanner for the specified file, if the file path is valid
-		try{
-			Scanner scan = new Scanner(file);
-			while(scan.hasNextLine()){
-				String word = scan.next();
-				word=word.toLowerCase();				//gets the next word and converts that to lower case
+			//Will try and create a new Scanner for the specified file, if the file path is valid
+			try{
+				Scanner scan = new Scanner(file);
+				while(scan.hasNextLine()){
+					String word = scan.next();
+					word=word.toLowerCase();				//gets the next word and converts that to lower case
 
-				//if the map contains the word, increments its value by 1, else creates a new key-value pair
-				if(map.containsKey(word)){
-					map.put(word, map.get(word)+1);
-				}
-				else{
-					map.put(word, 1);
-				}
-			}// wnd while
-			scan.close();
-		}// end try
-		catch(Error e){
-			e.printStackTrace();
+					//if the map contains the word, increments its value by 1, else creates a new key-value pair
+					if(map.containsKey(word)){
+						map.put(word, map.get(word)+1);
+					}
+					else{
+						map.put(word, 1);
+					}
+				}// wnd while
+				scan.close();
+			}// end try
+
+			catch(FileNotFoundException e){
+				e.printStackTrace();
+			}	
+			print(map, filename);
 		}
+	}
 
+	public static void print(HashMap<String, Integer> map, String file){
 		int loop_limit = 10;
 		String top_ten="Word     Encountered\n\n";
 
@@ -58,6 +68,7 @@ public class Indexer{
 		}// end for
 
 		//Prints the final output
-		System.out.println("\nThe top "+loop_limit+ " words are:\n\n"+top_ten);
+		System.out.println("\nThe top "+loop_limit+ " words in "+file+" are:\n\n"+top_ten);
 	}
+
 }
